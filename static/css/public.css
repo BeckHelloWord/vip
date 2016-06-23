@@ -220,16 +220,16 @@ a.button_b{color:#5a7fb1;}
 }
 /*主页 end*/
 .vip-wrap>div{background:#edf0f3;}
-.page .page-item{
+.vip-page .page-item{
     padding:5%;margin-top:5%;font-size:1.2rem;color:#666;text-align:justify; background: #fff;
 }
-.page .page-item h2{
+.vip-page .page-item h2{
     position:relative;padding-left:8%;margin-bottom:3%;font-size:1.4rem;font-weight: 500;color:#2d449f;
 }
-.page .page-item h2 i{
+.vip-page .page-item h2 i{
     position: absolute;top:50%;left:0;width:16px;height:19px;-webkit-transform:translateY(-50%);-moz-transform:translateY(-50%);-ms-transform:translateY(-50%);-o-transform:translateY(-50%);transform:translateY(-50%);
 }
-.page  ul li{margin-top:2%;}
+.vip-page  ul li{margin-top:2%;}
 
 /*权益*/
 .equity .details h2 i.arrow{background: url('../image/arrow-icon.png') no-repeat;background-size:100% 100%;}

@@ -17,9 +17,9 @@
     <a class="reload" onclick="location.reload()"></a>
 </header>
 
-<section id="vip-page" class="vip-wrap">
+<section id="vip-page" class="vip-wrap vip-page">
     <!--主页 start-->
-    <div class="homepage" v-bind:class="{}">
+    <div class="homepage" v-show="showPage=='mainPage'">
         <div class="vip-info">
             <div class="vip-info-list clearfix">
                 <div class="fl plr5" v-on:click="skipIntegral">
@@ -87,13 +87,13 @@
     <!--主页 end-->
 
     <!--权益介绍 start-->
-    <div class="equity" style="display: none;">
-        <div class="details">
+    <div class="equity" v-show="showPage=='power'">
+        <div class="details page-item">
             <h2><i class="arrow"></i>权益名称</h2>
             <p>会计学上指资产</p>
             <p>属于所有人的叫做所有者权益，属于债权人的权益叫做债权人权益</p>
         </div>
-        <div class="details">
+        <div class="details page-item">
             <h2><i class="ask"></i>权益介绍</h2>
             <p>所有者权益与债权人权益比较，一般具有以下四个基本特征：</p>
             <ul>
@@ -107,7 +107,7 @@
     <!--权益介绍 end-->
 
     <!--成长值帮助 start-->
-    <div class="exp" style="display: none;">
+    <div class="exp"  v-show="showPage=='growUp'">
         <div class="page-item details ">
             <h2><i class="upgrade"></i>升级说明</h2>
             <table class="upgrade-wrap">
@@ -148,7 +148,7 @@
     <!--成长值帮助 end-->
 
     <!--成长值记录 start-->
-    <div class="record" style="display: none;">
+    <div class="record" v-show="showPage=='history'">
         <div class="details clearfix"><span class="fl month">本月</span><span
                 class="fr money">小计<strong>8344</strong></span></div>
         <div class="details">

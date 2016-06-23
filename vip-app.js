@@ -15,11 +15,12 @@
     var vip=new Vue({
         el:'#vip-page',
         data:{
+            showPage:'mainPage',
             homepage:personInfo,    //主页信息
         },
         methods:{
             skipIntegral:function () {
-                
+                this.showPage='history'
             },
             skipGrade:function () {
 
