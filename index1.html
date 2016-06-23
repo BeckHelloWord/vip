@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html id="app" manifest="bx.appcache">
+<head>
+<meta charset="utf-8">
+<title>我的客户</title>
+<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,minimum-scale=1,user-scalable=no" />
+<meta name="format-detection" content="telephone=no,email=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" type="text/css" media="screen" href="static/css/public.css?20160531" />
+</head>
+<body>
+<header id="top_nav" class="top_nav">
+    <a v-if="showgoback" class="back v-hide" v-on:click="goback()">&lt;</a>
+    <div>理财师</div>
+    <a class="reload" onclick="location.reload()"></a>
+</header>
+
+<section id="page" v-bind:class="['page', pagenavClass]">
+	<div v-show="showtab == 'customers'">
+		<table class="tableA fixed">
+			<thead>
+				<tr>
+					<th>客户信息</th>
+					<th width="33%">账户余额(元)</th>
+					<th width="33%">在投金额(元)</th>
+				</tr>
+			</thead>
+		</table>
+		<table class="tableA">
+		<template v-if="customers.data.length > 0">
+			<tbody>
+				<tr v-for="temp in customers.data" v-on:click="setType('view',temp.investorId)">
+					<td>
+						<strong>{{ temp.realName }}</strong>
+						<p>{{ temp.mobile }}</p>
+					</td>
+					<td width="33%">{{ temp.availableMoney }}</td>
+					<td width="33%">{{ temp.waitingReceiptAllMoney }}</td>
+				</tr>
+			</tbody>
+		</template>
+			<tbody>
+				<tr class="noData" v-if="customers.data.length < 1 && customers.isSuccess === true">
+					<td colspan="3">一个客户都没有</td>
+				</tr>
+				<tr class="noData" v-if="customers.data.length < 1 && customers.isSuccess === false">
+					<td colspan="3">{{ customers.message }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<a href="javascript:;" v-show="pagedata['customers']['stillMore']" when-visibled="loadMore" v-on:click="loadMore" class="button_b page_button">加载更多</a>
+	</div>
+	<div v-show="showtab == 'receipts'">
+		<table class="tableA fixed">
+			<thead>
+				<tr>
+					<th>客户信息</th>
+					<th width="33%">回款金额(元)</th>
+					<th width="33%">回款日期</th>
+				</tr>
+			</thead>
+		</table>
+		<table class="tableA">
+		<template v-if="receipts.data.length > 0">
+			<tbody>
+				<tr v-for="temp in receipts.data" v-on:click="setType('view',temp.investorId)">
+					<td>
+						<strong>{{ temp.realName }}</strong>
+						<p>{{ temp.mobile }}</p>
+					</td>
+					<td width="33%">{{ temp.shouldReceipt }}</td>
+					<td width="33%">{{ temp.deadline.substring(0,10)}}</td>
+				</tr>
+			</tbody>
+		</template>
+			<tbody>
+			<template v-if="receipts.data.length < 1 && receipts.isSuccess == true">
+				<tr class="noData">
+					<td colspan="3">近30天一笔回款都没有</td>
+				</tr>
+			</template>
+			<template v-if="receipts.data.length < 1 && receipts.isSuccess == false">
+				<tr class="noData">
+					<td colspan="3">{{ receipts.message }}</td>
+				</tr>
+			</template>
+			</tbody>
+		</table>
+		<a href="javascript:;" v-show="pagedata['receipts']['stillMore']" when-visibled="loadMore" v-on:click="loadMore" class="button_b page_button">加载更多</a>
+	</div>
+	
+	<div v-show="showtab == 'invests'">
+		<table class="tableA fixed">
+			<thead>
+				<tr>
+					<th>客户信息</th>
+					<th width="33%">投资金额(元)</th>
+					<th width="33%">投资日期</th>
+				</tr>
+			</thead>
+		</table>
+		<table class="tableA">
+		<template v-if="invests.data.length > 0">
+			<tbody>
+				<tr v-for="temp in invests.data" v-on:click="setType('view',temp.investorId)">
+					<td>
+						<strong>{{ temp.realName }}</strong>
+						<p>{{ temp.mobile }}</p>
+					</td>
+					<td width="33%">{{ temp.investAmount }}</td>
+					<td width="33%">{{ temp.dateCreated }}{{ temp.dateInterest || '' }}</td>
+				</tr>
+			</tbody>
+		</template>
+			<tbody>
+			<template v-if="invests.data.length < 1 && invests.isSuccess == true">
+				<tr class="noData">
+					<td colspan="3">近30天一笔投资都没有</td>
+				</tr>
+			</template>
+			<template v-if="invests.data.length < 1 && invests.isSuccess == false">
+				<tr class="noData">
+					<td colspan="3">{{ invests.message }}</td>
+				</tr>
+			</template>
+			</tbody>
+		</table>
+		<a href="javascript:;" v-show="pagedata['invests']['stillMore']" when-visibled="loadMore" v-on:click="loadMore" class="button_b page_button">加载更多</a>
+	</div>
+	
+	<div class="customer_page" v-show="showtab == 'view'">
+		<div class="info" v-bind:style="{backgroundColor : viewbgc}">
+		<template v-if="customer.info.isSuccess == false">
+			<h1>{{customer.info.message}}</h1>
+		</template>
+		<template v-if="customer.info.isSuccess == true">
+			<strong>{{customer.info.data.realName }}</strong>
+			<p>{{customer.info.data.mobile }}</p>
+			<div class="info_b">
+				<div>账户余额(元) <p>{{customer.info.data.availableMoney}}</p></div>
+				<div>在投金额(元) <p>{{customer.info.data.waitingReceiptAllMoney}}</p></div>
+			</div>
+		</template>
+		</div>
+		<div class="list">
+			<table class="tableA listhead">
+				<thead>
+					<tr>
+						<th>投资项目</th>
+						<th width="33%">回款金额(元)</th>
+						<th width="33%">回款日期</th>
+					</tr>
+				</thead>
+			</table>
+			<table class="tableA listbody">
+			<template v-if="customer.list.data.length > 0">
+				<tbody>
+					<tr v-for="temp in customer.list.data">
+						<td><p>{{ temp.borrowName }}</p><p>{{ temp.dateInterest || '未起息'}}</p></td>
+						<td width="33%">{{ temp.amount }}</td>
+						<td width="33%">{{ temp.nextReceipt.substring(0,10) }}</td>
+					</tr>
+				</tbody>
+			</template>
+				<tbody>
+				<template v-if="customer.list.data.length < 1 && customer.list.isSuccess == true">
+					<tr class="noData">
+						<td colspan="3">Ta还没有投资过，赶紧联系Ta！</td>
+					</tr>
+				</template>
+				<template v-if="customer.list.data.length < 1 && customer.list.isSuccess == false">
+					<tr class="noData">
+						<td colspan="3">{{ customer.list.message }}</td>
+					</tr>
+				</template>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<nav v-bind:class="['tab_bar', 'show_'+showtab]">
+	<template v-if="showtab == 'view'">
+		<a class="sms_btn" v-bind:href="customer.info.data.sms" target="_blank">短信联系</a>
+		<a class="tel_btn" v-bind:href="customer.info.data.tel" target="_blank">拨打电话</a>
+	</template>
+	<template v-if="showtab != 'view'">
+		<a class="customers_btn" v-on:click="setType('customers')">我的客户</a>
+		<a class="receipts_btn" v-on:click="setType('receipts')">即将回款</a>
+		<a class="invests_btn" v-on:click="setType('invests')">近期投资</a>
+	</template>
+	</nav>
+</section>
+
+
+<script src="static/js/md5.js"></script>
+<script src="static/js/vue.min.js"></script>
+<script src="static/js/zepto.min.js"></script>
+<script src="app-备份.js?20160531"></script>
+</body>
+</html>
